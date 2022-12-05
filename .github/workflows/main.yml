@@ -1,0 +1,26 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.3.6
+      - name: Authenticate to Azure
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Initialize Terraform
+        run: terraform init
+      - name: Plan Terraform deployment
+        run: terraform plan
+      - name: Apply Terraform deployment
+        run: terraform apply -auto-approve
