@@ -18,8 +18,17 @@ jobs:
         uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Create storage account for Terraform state
+        run: |
+          AZURE_STORAGE_ACCOUNT_NAME="terraformtikspocstate"
+          if ! az storage account show -n $AZURE_STORAGE_ACCOUNT_NAME; then
+            az storage account create -n $AZURE_STORAGE_ACCOUNT_NAME -g $AZURE_RESOURCE_GROUP -l $AZURE_LOCATION --sku Standard_LRS
+          fi
       - name: Initialize Terraform
-        run: terraform init
+        run: |
+          AZURE_STORAGE_ACCOUNT_NAME="terraformtikspocstate"
+          AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list -n $AZURE_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+          terraform init -backend-config="storage_account_name=$AZURE_STORAGE_ACCOUNT_NAME" -backend-config="access_key=$AZURE_STORAGE_ACCOUNT_KEY"
       - name: Plan Terraform deployment
         run: terraform plan
       - name: Apply Terraform deployment
