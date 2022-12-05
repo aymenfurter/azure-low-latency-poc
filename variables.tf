@@ -1,9 +1,3 @@
-# Variables for the AKS cluster
-variable "aks_name" {
-  type = string
-  default = "aks-cluster"
-}
-
 variable "aks_location" {
   type = string
   default = "Switzerland North"
@@ -11,7 +5,7 @@ variable "aks_location" {
 
 variable "aks_resource_group_name" {
   type = string
-  default = "aks-resource-group"
+  default = "rg-tiks-dev-switzerland-north-001"
 }
 
 variable "aks_dns_prefix" {
@@ -32,7 +26,7 @@ variable "aks_log_analytics_workspace_id" {
 # Variables for the Event Hub
 variable "eventhub_namespace_name" {
   type = string
-  default = "eventhub-namespace"
+  default = "tikseventhubnsdev"
 }
 
 variable "eventhub_location" {
@@ -42,18 +36,18 @@ variable "eventhub_location" {
 
 variable "eventhub_resource_group_name" {
   type = string
-  default = "aks-resource-group"
+  default = "rg-tiks-dev-switzerlandnorth-004"
 }
 
 variable "eventhub_name" {
   type = string
-  default = "eventhubtopic"
+  default = "eventhubtiksdev001"
 }
 
 # Variables for the key vault
 variable "keyvault_name" {
   type = string
-  default = "keyvault"
+  default = "kvtiksdev001"
 }
 
 variable "keyvault_location" {
@@ -63,18 +57,15 @@ variable "keyvault_location" {
 
 variable "keyvault_resource_group_name" {
   type = string
-  default = "aks-resource-group"
+  default = "rg-tiks-dev-switzerlandnorth-002"
 }
 
-variable "keyvault_tenant_id" {
-  type = string
-}
 
 # Variables for the container registry
 variable "container_registry_name" {
   type = string
   # generate compliant name as per azure naming convention ending with numbers
-  default = "cregilowlattest001"
+  default = "crtiksdevcontainerregistry"
 }
 
 variable "container_registry_location" {
@@ -84,7 +75,7 @@ variable "container_registry_location" {
 
 variable "container_registry_resource_group_name" {
   type = string
-  default = "aks-resource-group"
+  default = "rg-tiks-dev-switzerlandnorth-003"
 }
 
 # Variables for the AKS node pool
@@ -100,18 +91,19 @@ variable "aks_node_count" {
 
 variable "aks_vm_size" {
   type = string
-  default = "Standard_DS1_v2"
+  default = "Standard_DS2_v2"
 }
 
 # Variables for the AKS cluster
 variable "aks_cluster_name" {
   type = string
-  default = "aks-cluster"
+  default = "aks-tiks-dev-switzerland"
+
 }
 
 variable "aks_kubernetes_version" {
   type = string
-  default = "1.25.4"
+  default = "1.25.2"
 }
 
 # Variables for the Event Hub namespace

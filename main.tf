@@ -33,21 +33,25 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count = var.aks_node_count
     vm_size    = var.aks_vm_size
   }
+
+  depends_on          = [azurerm_resource_group.aks]
 }
 
 # Define the Key Vault
 resource "azurerm_key_vault" "keyvault" {
-  name                = var.keyvault_name
-  location            = var.keyvault_location
-  resource_group_name = var.keyvault_resource_group_name
-  tenant_id           = var.keyvault_tenant_id 
+  name                        = var.keyvault_name
+  location                    = var.keyvault_location
+  resource_group_name         = var.keyvault_resource_group_name
+  enabled_for_disk_encryption = true
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  soft_delete_retention_days  = 7
 
 
   # Configuration for the Key Vault
   sku_name            = "standard"
-  enabled_for_deployment = true
-  enabled_for_disk_encryption = true
-  enabled_for_template_deployment = true
+  purge_protection_enabled    = false
+  
+  depends_on          = [azurerm_resource_group.keyvault]
 }
 
 
@@ -97,4 +101,51 @@ resource "azurerm_eventhub" "eventhub" {
   # Configuration for the new Event Hub topic
   partition_count = var.eventhub_topic_partition_count
   message_retention = var.eventhub_topic_message_retention
+
+  depends_on          = [azurerm_resource_group.eventhub]
+}
+
+resource "azurerm_role_assignment" "aks_acr_role_assignment" {
+  scope                = azurerm_container_registry.containerregistry.id
+  role_definition_name = "AcrPush"
+  principal_id         = azurerm_kubernetes_cluster.aks.identity.0.principal_id
+
+  # Depend on the AKS cluster and container registry
+  depends_on = [azurerm_kubernetes_cluster.aks, azurerm_container_registry.containerregistry]
+}
+
+# Define the resource group for the Event Hub
+resource "azurerm_resource_group" "eventhub" {
+  name     = var.eventhub_resource_group_name
+  location = var.eventhub_location
+}
+
+# Define the resource group for the AKS cluster
+resource "azurerm_resource_group" "aks" {
+  name     = var.aks_resource_group_name
+  location = var.aks_location
+}
+
+# Define the resource group for the Key Vault
+resource "azurerm_resource_group" "keyvault" {
+  name     = var.keyvault_resource_group_name
+  location = var.keyvault_location
+}
+
+# Define the resource group for the ACR
+resource "azurerm_resource_group" "acr" {
+  name     = var.container_registry_resource_group_name
+  location = var.container_registry_location
+}
+
+
+resource "azurerm_key_vault_access_policy" "personal" {
+  key_vault_id = azurerm_key_vault.keyvault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  # Assign the Key Vault administrator role to the current user
+  key_permissions = ["Create", "Delete", "Get", "List", "Update", "Import", "Backup", "Restore", "Recover", "Purge"]
+  secret_permissions = ["Set", "Get", "List", "Delete", "Recover", "Backup", "Restore", "Purge"]
+  certificate_permissions = ["Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Purge"]
 }

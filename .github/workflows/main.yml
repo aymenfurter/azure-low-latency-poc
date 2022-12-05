@@ -18,9 +18,11 @@ jobs:
         uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          tenant: ${{ secrets.TENANT }}
       - name: Create storage account for Terraform state
         run: |
           AZURE_STORAGE_ACCOUNT_NAME="terraformtikspocstate"
+          AZURE_LOCATION="switzerlandnorth"
           if ! az storage account show -n $AZURE_STORAGE_ACCOUNT_NAME; then
             az storage account create -n $AZURE_STORAGE_ACCOUNT_NAME -g $AZURE_RESOURCE_GROUP -l $AZURE_LOCATION --sku Standard_LRS
           fi
