@@ -88,7 +88,7 @@ resource "azurerm_key_vault_secret" "eventhub_access_keys" {
   key_vault_id        = azurerm_key_vault.keyvault.id
 
   # Depend on the key vault and AKS cluster
-  depends_on          = [azurerm_key_vault.keyvault, azurerm_kubernetes_cluster.aks]
+  depends_on          = [azurerm_key_vault.keyvault, azurerm_kubernetes_cluster.aks, azurerm_key_vault_access_policy.personal]
 }
 
 

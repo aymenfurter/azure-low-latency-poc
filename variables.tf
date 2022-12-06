@@ -5,7 +5,7 @@ variable "aks_location" {
 
 variable "aks_resource_group_name" {
   type = string
-  default = "rg-tiks-dev-switzerland-north-001"
+  default = "rg-tiks-dev-switzerlandnorth-001"
 }
 
 variable "aks_dns_prefix" {
