@@ -7,6 +7,7 @@ resource "azurerm_eventhub_namespace" "eventhub" {
   # Configuration for the Event Hub namespace
   capacity            = var.eventhub_namespace_capacity
   sku                 = "Standard"
+  depends_on          = [azurerm_resource_group.eventhub]
 }
 
 # Define the AKS cluster
