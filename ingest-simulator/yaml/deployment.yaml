@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingest-simulator
+  namespace: tiks
+  labels:
+    app: ingest-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingest-simulator
+  template:
+    metadata:
+      labels:
+        app: ingest-simulator
+    spec:
+      serviceAccountName: workload-identity-sa
+      containers:
+        - name: ingest-simulator
+          image: crtiksdevcontainerregistry.azurecr.io/ingest-simulator:latest
