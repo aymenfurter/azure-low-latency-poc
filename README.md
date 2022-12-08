@@ -2,7 +2,9 @@
 ![screen](screen.png)
 
 # azure-low-latency-poc
-A demo application that measures the round trip of an event being written to and from an event hub topic running on Azure. 
+A demo application that measures the round trip time of an event being written to and from an event hub topic running on Azure. 
+
+![screen](setup.png)
 
 This project is for deploying an Azure Kubernetes Service (AKS) cluster and an Azure Event Hub. The AKS cluster will be used for deploying and managing containerized applications, while the Event Hub will be used for data streaming and ingestion. The project includes a Terraform configuration for provisioning the AKS cluster and Event Hub, as well as a Terraform variable file for defining customizable parameters. Additionally, a Terraform test file is included for validating the deployment. 
 
